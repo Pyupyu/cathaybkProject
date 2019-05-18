@@ -207,11 +207,11 @@ public class EmpProcessServiceImpl implements EmpProcessService{
 	}
 	
 	//員工查詢
-	public String empQuery(EmpPersonalData empData) {
-		String result = "";
-		String name ="";
-		String empNumber ="";
-		String empDeptId ="";
+	public EmpPersonalData empQuery(EmpPersonalData empData) {
+		EmpPersonalData  empfinalData = new  EmpPersonalData();
+		String name = "";
+		String empNumber = "";
+		String empDeptId = "";
 		String age = "";
 		
 		try {
@@ -229,13 +229,14 @@ public class EmpProcessServiceImpl implements EmpProcessService{
 			}
 			
 			//查詢
-			empPersonal.queryEmpData(name, empNumber, empDeptId, age);
-			
+			empfinalData = empPersonal.queryEmpData(name,empNumber,empDeptId,age);
+
 			//分頁
+			
 			
 		}catch(Exception e) {
 			e.getMessage();
 		}
-		return result;
+		return empfinalData;
 	}
 }

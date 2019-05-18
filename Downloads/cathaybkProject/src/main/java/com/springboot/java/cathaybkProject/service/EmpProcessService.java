@@ -17,5 +17,5 @@ public interface EmpProcessService{
 	
 	public String empDelete(EmpPersonalData empData);
 	
-	public String empQuery(EmpPersonalData empData);
+	public EmpPersonalData empQuery(EmpPersonalData empData);
 }
