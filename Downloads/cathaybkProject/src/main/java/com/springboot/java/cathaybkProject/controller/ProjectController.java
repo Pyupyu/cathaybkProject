@@ -91,14 +91,15 @@ public class ProjectController {
 	
 	//查詢員工資料
 	@RequestMapping(value="/queryEmp" ,method=RequestMethod.POST)
-	public EmpPersonalData queryEmp(@RequestBody EmpPersonalData empData) {
+	public String  queryEmp(@RequestBody EmpPersonalData empData) {
+		String result="";
 		try {
-			empData = empProcess.empQuery(empData);
+			result = empProcess.empQuery(empData);
 			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return empData;
+		return result;
 	}
 	
 }

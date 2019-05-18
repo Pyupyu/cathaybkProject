@@ -29,6 +29,7 @@ public class EmpProcessServiceImpl implements EmpProcessService{
 	private EmpRepositoryHistory empPersonalH;
 	@Autowired
 	ObjectMapper mapper;
+	private static final int PAGESIZE = 10;
 	
 	//新增部門
 	public String deptAdd(EmpDept dept) {
@@ -207,8 +208,9 @@ public class EmpProcessServiceImpl implements EmpProcessService{
 	}
 	
 	//員工查詢
-	public EmpPersonalData empQuery(EmpPersonalData empData) {
+	public String empQuery(EmpPersonalData empData) {
 		EmpPersonalData  empfinalData = new  EmpPersonalData();
+		String result = "";
 		String name = "";
 		String empNumber = "";
 		String empDeptId = "";
@@ -217,26 +219,63 @@ public class EmpProcessServiceImpl implements EmpProcessService{
 		try {
 			if(!StringUtils.isEmpty(empData.getName())) {
 				name = empData.getName();
+			}else {
+				name =null;
 			}
 			if(!StringUtils.isEmpty(empData.getEmpNumber())) {
 				empNumber = empData.getEmpNumber();
+			}else {
+				empNumber =null;
 			}
 			if(!StringUtils.isEmpty(empData.getEmpDeptId())) {
 				empDeptId = empData.getEmpDeptId();
+			}else {
+				empDeptId =null;
 			}
 			if(!StringUtils.isEmpty(empData.getAge())) {
 				age = empData.getAge();
+			}else {
+				age = null;
 			}
 			
 			//查詢
-			empfinalData = empPersonal.queryEmpData(name,empNumber,empDeptId,age);
-
-			//分頁
+			List<EmpPersonalData> tempListValue = empPersonal.queryEmpData(name,empNumber,empDeptId,age);
 			
+			if(null!=tempListValue && tempListValue.size()>0) {
+				StringBuffer sb = new StringBuffer();
+				for(int i =0;i<tempListValue.size();i++) {
+					empfinalData = tempListValue.get(i);
+					result = mapper.writeValueAsString(empfinalData);
+					sb.append(result+",");
+				}
+				result= sb.toString();
+			}
+			//分頁
+			int currentPage = this.setPageItemsAndGetCurrentPage("0",tempListValue.size());
 			
 		}catch(Exception e) {
 			e.getMessage();
 		}
-		return empfinalData;
+		return result;
+	}
+	
+	private int setPageItemsAndGetCurrentPage(String nowPage ,int totalRecordSize){
+		
+		String size = String.valueOf(PAGESIZE);
+		String recordSize= String.valueOf(totalRecordSize);		
+		
+		int totalPages = 1;
+		int currentPage = 1;
+
+		if (StringUtils.isEmpty(nowPage)) {
+			currentPage = Integer.parseInt(nowPage);
+			totalPages = Integer.parseInt(recordSize);
+			if(currentPage > totalPages){
+				currentPage = totalPages;
+			}
+		}else{
+			currentPage = 1;
+		}		
+		return currentPage;
 	}
 }
